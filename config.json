@@ -1,0 +1,7 @@
+{
+  "PREFIX": "!", 
+  "TOKEN": "TOKEN", 
+  "YOUTUBE_API_KEY": "API KEY",
+  "QUEUE_LIMIT": 0,
+  "COLOR": "RED" 
+}
