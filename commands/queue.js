@@ -5,13 +5,14 @@ const { COLOR } = require("../config.json");
 module.exports = {
   name: "queue",
   description: "Get all the song name which are in queue",
+aliases: ["q",'list'],
   execute: (client, message, args) => {
     let embed = new MessageEmbed().setColor(COLOR);
     const { channel } = message.member.voice;
 
     if (!channel) {
       //IF AUTHOR IS NOT IN VOICE CHANNEL
-      embed.setAuthor("YOU NEED TO BE IN VOICE CHANNEL :/");
+      embed.setAuthor("❌ | You need to be in a Voice Channel Before executing this command");
       return message.channel.send(embed);
     }
 
@@ -33,3 +34,4 @@ module.exports = {
     message.channel.send(embed);
   }
 };
+

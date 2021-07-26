@@ -4,9 +4,9 @@ const { COLOR } = require("../config.json");
 const discord = require("discord.js");
 
 module.exports = {
-  name: "stop",
-  description: "Clear the queue on the bot [Bot Stays In VC!]",
-  aliases: ["clear", "c", "clearqueue"],
+  name: "disconnect",
+  description: "Disconnect the bot and take some rest.",
+  aliases: ["dc"],
   async execute(client, message, args) {
     let embed = new MessageEmbed().setColor(COLOR);
 
@@ -19,16 +19,11 @@ module.exports = {
       );
       return message.channel.send(embed);
     }
-
     const serverQueue = message.client.queue.get(message.guild.id);
-
-    if (!serverQueue) {
-      await channel.leave();
-      embed.setAuthor("Successfully Disconnected");
-      return message.channel.send(embed);
-    }
+    await channel.leave();
+    embed.setAuthor("Successfully Disconnected");
+    return message.channel.send(embed);
 
     serverQueue.songs = [];
-    serverQueue.connection.dispatcher.end();
   }
 };
