@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "checkJs": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+        "module": "commonJS",
+        "target": "esnext",
+        "lib": ["esnext", "esnext.array", "esnext.asynciterable", "esnext.bigint", "esnext.intl", "esnext.symbol"],
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true
+    },
+    "exclude": ["node_modules"]
+}

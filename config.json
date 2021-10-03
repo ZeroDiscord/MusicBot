@@ -1,7 +1,0 @@
-{
-  "PREFIX": "!", 
-  "TOKEN": "Do not add your token here please head to .env and add it there",
-  "QUEUE_LIMIT": 0 , 
-  "COLOR": "RED",
-  "inviteURL": "Support Server"
-}

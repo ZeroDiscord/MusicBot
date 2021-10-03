@@ -1,0 +1,42 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "MainConfig",
+    "title": "Main Config For The bot",
+    "description": "JSON Schema for config.json",
+    "type": "object",
+    "properties": {
+      "guildId": {
+        "description": "The development guild id",
+        "type": "string"
+      },
+      "tcg" : {
+        "description": "TCG API, can get from https://dev.pokemontcg.io/ Optional api key",
+        "type": "string"
+      },
+      "topgg" : {
+        "description": "top.gg token, can get details from https://docs.top.gg/resources/webhooks/",
+        "type": "string"
+      },
+      "token": {
+        "description": "The bot's token, to generate a token go to https://discord.com/developers/applications",
+        "type": "string"
+      },
+      "partials": {
+        "description": "Shortcut to enabling discord.js partial structures, check https://discordjs.guide/popular-topics/partials.html",
+        "type": "array",
+        "items": {
+          "enum": ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]
+        }
+      }, 
+      "prefix": {
+        "description": "Prefix for the bot",
+        "type": "string"
+      },
+      "owner": {
+        "description": "The ID of the owner (The user who can use owner-specific commands)",
+        "type": "string"
+      }
+    },
+    "required": ["token","guildId", "owner"],
+    "additionalProperties": false
+  }

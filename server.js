@@ -1,66 +1,53 @@
-const discord = require("discord.js");
-const client = new discord.Client({
-  disableEveryone: true,
-  disabledEvents: ["TYPING_START"]
-});
-const { readdirSync } = require("fs");
-const { join } = require("path");
-const { PREFIX } = require("./config.json");
-
-//CLIENT EVENTS
-client.on("ready", () => {
-  console.log("Ready to boom your ears | Bot created by ZeroSync");
-  client.user.setActivity("Sourced By 0_0#6666");
+const { Client, Collection } = require('discord.js');
+const fastGlob = require('fast-glob');
+const { token } = require('./settings/settings.json');
+const client = new Client({
+	partials: ['CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION', 'USER'],
+	intents: ['GUILDS', 'GUILD_VOICE_STATES'],
+	shards: 'auto',
 });
 
-client.on("warn", info => console.log(info));
+/**
+ * @type {Collection<string,
+ * {type: ?number,
+ * name: string,
+ * description:?string,
+ * guildOnly: boolean,
+ * cooldown: number,
+ * options:?[{type: number, name: string, description: string, options:?[{}], required: boolean}],
+ * slashcommand: ?Promise,
+ * contextmenu: ?Promise,
+ * selectmenu: ?Promise,
+ * button: ?Promise}>}
+ */
+const appcommands = new Collection();
 
-client.on("error", console.error);
+// Checks commands, events and the slash folder
+const matches = fastGlob.sync('@(commands|events)/**/**.js');
 
-//DEFINIING
-client.commands = new discord.Collection();
-client.prefix = PREFIX;
-client.queue = new Map();
-client.vote = new Map();
+for (const match of matches) {
+	/**
+     * Example: commands/utility/deploy.js
+     * First Value: commands
+     * Final Value: deploy.js
+     */
+	const fileSplit = match.split('/');
+	const fileName = fileSplit[fileSplit.length - 1];
+	const dirName = fileSplit[0];
+	const requiredFile = require('./' + match);
 
-//LETS LOAD ALL FILES
-const cmdFiles = readdirSync(join(__dirname, "commands")).filter(file =>
-  file.endsWith(".js")
-);
-for (const file of cmdFiles) {
-  const command = require(join(__dirname, "commands", file));
-  client.commands.set(command.name, command);
-} //LOADING DONE
+	// For each directory
+	switch (dirName) {
+	case 'commands':
+		console.log(`Loading ApplicationCommand ${fileName}`);
 
-//WHEN SOMEONE MESSAGE
-client.on("message", message => {
-  if (message.author.bot) return;
-  if (!message.guild) return;
+		appcommands.set(requiredFile.name, requiredFile);
+		break;
 
-  if (message.content.startsWith(PREFIX)) {
-    //IF MESSSAGE STARTS WITH MINE BOT PREFIX
-    const args = message.content
-      .slice(PREFIX.length)
-      .trim()
-      .split(/ +/); //removing prefix from args
-    const commandName = args.shift().toLowerCase();
-    const command =
-      client.commands.get(commandName) ||
-      client.commands.find(
-        cmd => cmd.aliases && cmd.aliases.includes(commandName)
-      );
-    if (!command) return;
-    try {
-      //TRY TO GET COMMAND AND EXECUTE
-
-      command.execute(client, message, args);
-    } catch (err) {
-      //IF IT CATCH ERROR
-      console.log(err);
-      message.reply("I am getting error on using this command");
-    }
-  }
-});
-
-//DONT DO ANYTHING WITH THIS TOKEN lol
-client.login(process.env.TOKEN);
+	case 'events':
+		console.log(`Loading Event ${fileName}`);
+		client.on(requiredFile.name, (...args) => requiredFile.run(...args, appcommands, client));
+		break;
+	}
+}
+client.login(token);
