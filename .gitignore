@@ -4,7 +4,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-setting.json
+settings.json
 
 # Runtime data
 pids
@@ -62,3 +62,4 @@ typings/
 # test directory/ hidden/ database directory
 /test
 /data
+/settings
